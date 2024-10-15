@@ -1,0 +1,16 @@
+﻿feature,data type,Nulls?,description
+product_id,string,FALSE,Unique product ID
+company_id,string,FALSE,Unique company ID
+transaction_id,string,FALSE,Unique transaction ID
+product_name,string,FALSE,Product naming convention
+product_category,string,FALSE,Categorical class of the individual product
+sale_amount,float,FALSE,Total sales amount for the product line item
+quantity_sold,int,FALSE,Total quantity of product line item purchased
+price_per_unit,float,FALSE,Price per unit of product line item purchased
+uom,string,FALSE,Product packaging method
+address,string,FALSE,Company city and state
+region,string,FALSE,"US Region related to address, to be used for territory groupings"
+customer_segment,string,FALSE,Company industry type
+sales_rep_name,string,FALSE,Sales rep for transaction
+date_of_sale,date,FALSE,Date of the transaction
+multiple_items,bit,FALSE,True/False identification of whether the transaction has multiple products/records
