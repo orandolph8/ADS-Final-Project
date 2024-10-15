@@ -1,0 +1,10 @@
+feature,data type,Nulls?,description
+business_unit,string,FALSE,"Often, organizations will split this product offerings into ""Business Units"". Business Units are supported by different Sales Teams"
+lead_contact,string,FALSE,Whether the person is known to the database (Contact) or is net new (Lead)
+title,string,TRUE,Job title of the person
+job_level,string,TRUE,Job level of the person
+industry,string,TRUE,Industry of the person being identified as a lead
+team,string,FALSE,Sales team which will be working the lead (Often determined by industry and product combinations)
+channel,string,FALSE,Activity channel the person took to become a lead
+lead_product,string,FALSE,Product of interest of the lead
+sales_qualified,bit,FALSE,Target variable. This is the metric we are utilizing to determine a success (1) or a failure (0)
