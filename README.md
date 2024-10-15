@@ -7,9 +7,9 @@ All material for the DSCI-590: ADS Final Project
 The user-facing feature of our project will be a dashboard that can be adjusted and give outputs based on features selected.  Our project will be comprised of four ML and visualization features.  The following shows the modules, their importance to the user, and the machine learning model used to give output data:
 
 •	Sales Lead Scoring and Prioritization
-  o	Help sales managers and sales reps prioritize and manage their leads to determine which to tackle when, which are most likely to convert, adjust marketing strategy, etc.
+  -	Help sales managers and sales reps prioritize and manage their leads to determine which to tackle when, which are most likely to convert, adjust marketing strategy, etc.
 
-  o	Model: Multinomial Logistic Regression (High, Medium, Low Priority)
+  -	Model: Multinomial Logistic Regression (High, Medium, Low Priority)
 •	Sales Territory Optimization
 
   o	Determine the maximum sales potential by territory.  Which cities and regions are more likely to buy certain
