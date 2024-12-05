@@ -6,7 +6,7 @@ import seaborn as sns
 from product_bundling import generate_bundles
 from product_pricing import predict_pricing
 # from territorial_sales import optimize_territories
-# from lead_scoring import score_leads
+from lead_scoring import score_leads
 
 def main():
     st.title("Healthcare SalesWizard Dashboard")
