@@ -187,7 +187,6 @@ def lead_scoring_module(uploaded_file):
             'product_31', 'product_69', 'product_45', 'product_36', 'product_30', 'product_54', 
             'product_10', 'product_58', 'product_17', 'product_2'
         ])
-        numerical_feature = st.number_input("Numerical Feature (e.g., Sales Volume)", value=0.0)
         
         # Collect user inputs into a dictionary
         user_inputs = {
@@ -198,7 +197,6 @@ def lead_scoring_module(uploaded_file):
             "team": team,
             "channel": channel,
             "lead_product": lead_product,
-            "numerical_feature": numerical_feature
         }
         
         # Button for prediction
