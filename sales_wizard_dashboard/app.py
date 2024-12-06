@@ -111,7 +111,7 @@ def lead_scoring_module(uploaded_file):
     st.header("Lead Scoring Module")
     
     # Perform Lead Scoring
-    lead_score = score_leads(uploaded_file)
+    lead_scoring = score_leads(uploaded_file)
     
     # Tabs for Input Options
     tab1, tab2 = st.tabs(["Upload CSV File", "Enter Lead Details Manually"])
