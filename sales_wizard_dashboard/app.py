@@ -109,85 +109,39 @@ def territorial_sales_module(uploaded_file):
 
 def lead_scoring_module(uploaded_file):
     st.header("Lead Scoring Module")
-    
-    # Perform Lead Scoring
-    lead_scoring = score_leads(uploaded_file)
-    
+
+    # Initialize variables
+    result_df = None
+    best_model_name = None
+    best_model_auc = None
+
     # Tabs for Input Options
     tab1, tab2 = st.tabs(["Upload CSV File", "Enter Lead Details Manually"])
-
-    # Variable to Store Results
-    result_df, best_model_name, best_model_auc = None, None, None
 
     # Tab 1: Upload a CSV File
     with tab1:
         st.subheader("Upload a CSV File")
-        uploaded_file = st.file_uploader("Choose a CSV file", type=["csv"])
         if uploaded_file:
-            result_df, best_model_name, best_model_auc = score_leads(uploaded_file)
-            if result_df is not None:
-                st.success("File processed successfully")
-            else:
-                st.error("Error processing the file.")
+            try:
+                # Score leads using the uploaded file
+                result_df, best_model_name, best_model_auc = score_leads(uploaded_file)
+                st.success("File processed successfully!")
+            except Exception as e:
+                st.error(f"Error processing the file: {e}")
 
     # Tab 2: Manual Lead Entry
     with tab2:
         st.subheader("Enter Lead Details Manually")
-        
+
         # Dropdown input fields with predefined options
-        business_unit = st.selectbox("Business Unit", [
-            'business_unit_1', 'business_unit_2', 'business_unit_3', 'business_unit_4'
-        ])
+        business_unit = st.selectbox("Business Unit", ['business_unit_1', 'business_unit_2', 'business_unit_3', 'business_unit_4'])
         lead_contact = st.selectbox("Lead Contact", ['Contact', 'Lead'])
-        job_level = st.selectbox("Job Level", [
-            'Staff-Level', 'Unknown', 'Director-Level', 'Manager-Level', 'C-Level',
-            'Provider-Level', 'VP-Level'
-        ])
-        industry = st.selectbox("Industry", [
-            'Assisted Living Facility', 'Home Health', 'Ambulatory Health Care Facilities', 
-            'Physician', 'Health System', 'Skilled Nursing Facility', 'Dental', 
-            'Software Vendor', 'Hospital', 'Other Ambulatory Provider', 'PT/OT/Rehab', 
-            'DME & Medical Supplies', 'Other', 'Health Plan', 'Hospice', 'Mental Health', 
-            'Revenue Cycle Management', 'Chiropractic', 'Billing Services', 'Unknown', 
-            'Pharmaceutical', 'Health Plan / Payer', 'Eye and Vision Services', 
-            'Facility/Agency', 'Residential Treatment Facilities', 
-            'Speech, Language and Hearing Service', 'Respiratory, Rehab & Restorative Service', 
-            'Pharmacy Service', 'Transportation Services', 'Podiatry', 'Nursing Service', 
-            'Consulting Services', 'Clinical Research', 'Management Companies', 'Pharmacy', 
-            'Behavioral Health & Social Service', 'Physician / Physician Group', 
-            'Financial Services', 'Patient/Disease/Advocacy Group', 'Professional', 
-            'Laboratories', 'Vendor', 'Biotech', 'Emergency Medical Service', 'Long Term Care', 
-            'ACO', 'Insight', 'ACOs-MCOs-IDNs', 'Staffing Agency', 'Payer Services', 
-            'Medical Device Manufacturer', 'Professional Society', 'Data Licensing Partner', 
-            'Other Service', 'Health Plan/Payer', 'Dietary & Nutritional Service', 
-            'Biotech Manufacturer', 'Pharma Manufacturer', 'Therapeutics', 'Sotfware Vendor', 
-            'Non-Healthcare', 'Trade Association', 'Diagnostics', 'Need Review', 
-            'Correctional Facility'
-        ])
-        team = st.selectbox("Team", [
-            'team_1', 'team_2', 'team_3', 'team_4', 'team_5', 'team_6', 'team_7', 'team_8',
-            'team_9', 'team_10', 'team_11', 'team_12', 'team_13'
-        ])
-        channel = st.selectbox("Channel", [
-            'Webinar', 'MDR Meeting', 'Inbound Call', 'Demo Request', 'PPC',
-            'Content Syndication', 'Survey', 'Web Chat', 'Tradeshow', 'PBP', 'Case Study',
-            'Web Traffic', 'Unknown'
-        ])
-        lead_product = st.selectbox("Lead Product", [
-            'product_7', 'product_27', 'product_40', 'product_1', 'product_41', 'product_28', 
-            'product_37', 'product_49', 'product_4', 'product_57', 'product_47', 'product_3', 
-            'product_24', 'product_5', 'product_35', 'product_46', 'product_19', 'product_23', 
-            'product_14', 'product_50', 'product_13', 'product_34', 'product_22', 'product_64', 
-            'product_6', 'product_53', 'product_26', 'product_44', 'product_25', 'product_42', 
-            'product_48', 'product_20', 'product_16', 'product_32', 'product_56', 'product_12', 
-            'product_60', 'product_51', 'product_61', 'product_8', 'product_55', 'product_21', 
-            'product_38', 'product_67', 'product_62', 'product_15', 'Unknown', 'product_29', 
-            'product_11', 'product_39', 'product_52', 'product_33', 'product_68', 'product_43', 
-            'product_65', 'product_18', 'product_9', 'product_63', 'product_59', 'product_66', 
-            'product_31', 'product_69', 'product_45', 'product_36', 'product_30', 'product_54', 
-            'product_10', 'product_58', 'product_17', 'product_2'
-        ])
-        
+        job_level = st.selectbox("Job Level", ['Staff-Level', 'Unknown', 'Director-Level', 'Manager-Level', 'C-Level', 'Provider-Level', 'VP-Level'])
+        industry = st.selectbox("Industry", ['Assisted Living Facility', 'Home Health', 'Ambulatory Health Care Facilities', 'Physician', 'Health System', 'Skilled Nursing Facility', 'Dental', 'Software Vendor', 'Hospital'])
+        team = st.selectbox("Team", ['team_1', 'team_2', 'team_3', 'team_4', 'team_5'])
+        channel = st.selectbox("Channel", ['Webinar', 'MDR Meeting', 'Inbound Call', 'Demo Request', 'PPC'])
+        lead_product = st.selectbox("Lead Product", ['product_1', 'product_2', 'product_3', 'product_4', 'product_5'])
+
         # Collect user inputs into a dictionary
         user_inputs = {
             "business_unit": business_unit,
@@ -198,26 +152,40 @@ def lead_scoring_module(uploaded_file):
             "channel": channel,
             "lead_product": lead_product,
         }
-        
-        # Button for prediction
+
+        # Button to score the manually entered lead
         if st.button("Score Lead"):
             try:
-                result_df, best_model_name, best_model_auc = score_leads(pd.DataFrame([user_inputs]))
-                if result_df is not None:
-                    st.success("Lead scored successfully!")
-                else:
-                    st.error("Error scoring the lead.")
+                # Generate predictions for the manually entered lead
+                result_df, best_model_name, _ = score_leads(pd.DataFrame([user_inputs]))
+                st.success("Lead scored successfully!")
             except Exception as e:
                 st.error(f"Error: {e}")
 
     # Display Results
     if result_df is not None:
         st.subheader("Prediction Results")
-        st.write(f"**Best Model**: {best_model_name}")
-        st.write(f"**AUC Score**: {best_model_auc:.4f}")
+
+        # Extract probability and predicted quality for the first lead
+        first_probability = result_df.iloc[0]['probability_sales_qualified']
+        first_quality = result_df.iloc[0]['predicted_quality']
+
+        # Explicitly display the prediction and quality for the first lead
+        st.write(f"The lead has a probability of **{first_probability:.2f}** to be sales qualified, "
+                 f"which corresponds to a **{first_quality}** rating.")
+
+        # Display the full results DataFrame
         st.dataframe(result_df)
-        
-        # Option to download results as CSV
+
+        # Include a note explaining classification rules
+        st.write("""
+            **Classification Rules:**
+            - High: Probability >= 0.5  
+            - Medium: Probability between 0.2 and 0.5  
+            - Low: Probability < 0.2
+        """)
+
+        # Option to download the results as a CSV
         csv = result_df.to_csv(index=False)
         st.download_button(
             label="Download Results as CSV",
@@ -225,6 +193,7 @@ def lead_scoring_module(uploaded_file):
             file_name="lead_scoring_results.csv",
             mime="text/csv"
         )
+
 
 # Run the Streamlit app
 # In terminal execute "streamlit run app.py"
