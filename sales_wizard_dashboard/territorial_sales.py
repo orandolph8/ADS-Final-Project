@@ -75,6 +75,8 @@ def optimize_territories(file):
     'predicted_growth_category': 'count' # Number of high-growth predictions
   }).reset_index()
 
+  # Create 'growth_rate_percentage'
+  high_growth_states['growth_rate_percentage'] = high_growth_states['growth_rate'] * 100
   # Normalize growth rate for easier visualization
   high_growth_states['normalized_growth_rate'] = (
     high_growth_states['growth_rate_percentage'] - high_growth_states['growth_rate_percentage'].min()
