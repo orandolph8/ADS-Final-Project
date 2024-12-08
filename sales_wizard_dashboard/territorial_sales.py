@@ -43,16 +43,16 @@ def optimize_territories(file):
   # One-Hot Encoding for 'region' column
   region_dummies = pd.get_dummies(df['region'], prefix='region')
   df = pd.concat([df, region_dummies], axis=1)
-
-  # Encode Target Variable
-  if target not in df.columns or df[target].dtype == 'object':
-    df['growth_category_encoded'] = LabelEncoder().fit_transform(df['growth_category'])
   
   # Define Features
   features = ['quantity_sold', 'price_per_unit', 'growth_rate', 'sale_amount',
               'region_West', 'region_South', 'region_Northeast',
               'region_Pacific Northwest/Mountain', 'multiple_items']
   target = 'growth_category_encoded'
+
+  # Encode Target Variable
+  if target not in df.columns or df[target].dtype == 'object':
+    df['growth_category_encoded'] = LabelEncoder().fit_transform(df['growth_category'])
 
   # Standardize numerical features
   scaler = StandardScaler()
