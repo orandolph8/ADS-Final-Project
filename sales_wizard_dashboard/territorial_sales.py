@@ -1,4 +1,5 @@
 #Import Libraries and Packages
+from sklearn.cluster import KMeans
 import pandas as pd
 import plotly.express as px
 from sklearn.ensemble import RandomForestClassifier
@@ -34,9 +35,13 @@ def optimize_territories(file):
   df = df.merge(
     state_sales[['state', 'growth_rate']], on='state', how='left')
   
-  # Categorize growth into high and low with quantiles
-  df['growth_category'] = pd.qcut(df['growth_rate'], q=2, labels=['Low Growth', 'High Growth'])
+  # Apply K-Means clustering to categorize into 'High Growth' and 'Low Growth'
+  kmeans = KMeans(n_clusters=2, random_state=42)
+  df['growth_category'] = kmeans.fit_predict(df[['growth_rate']])
 
+  # Map cluster labels to meaningful categories (0=Low Growth, 1=High Growth)
+  df['growth_category'] = df['growth_category'].apply(lambda x: 'High Growth' if x == 1 else 'Low Growth')
+  
   # One-Hot Encoding for 'state' column
   state_dummies = pd.get_dummies(df['state'], prefix='state')
   df = pd.concat([df, state_dummies], axis=1)
@@ -75,9 +80,6 @@ def optimize_territories(file):
   # Udpate only rows in df corresponding to test set
   df.loc[X_test.index, 'predicted_growth_category'] = y_pred
 
-  # Filter High Growth predictions
-  df_high_growth = df[df['predicted_growth_category'] == 1]
-
   # Calculate average growth rate percentage by state
   average_growth_by_state = df_high_growth.groupby('state')['growth_rate'].mean()
 
@@ -85,21 +87,21 @@ def optimize_territories(file):
   total_sales_by_state = df_high_growth.groupby('state')['sale_amount'].sum()
 
   # Merge into DataFrame
-  high_growth_states = pd.DataFrame({
+  all_growth_states = pd.DataFrame({
     'growth_rate': average_growth_by_state,
     'sale_amount': total_sales_by_state
   }).reset_index()
 
-  # Aggregate count of high-growth predictions
-  high_growth_counts = df_high_growth.groupby('state')['predicted_growth_category'].count().reset_index()
-  high_growth_counts = high_growth_counts.rename(columns={'predicted_growth_category': 'predicted_growth_category_count'})
+  # Aggregate count of growth predictions
+  growth_counts = df.groupby('state')['predicted_growth_category'].count().reset_index()
+  growth_counts = growth_counts.rename(columns={'predicted_growth_category': 'predicted_growth_category_count'})
 
   # Merge into main DataFrame
-  high_growth_states = pd.merge(high_growth_states, high_growth_counts, on='state', how='left')
+  all_growth_states = pd.merge(all_growth_states, growth_counts, on='state', how='left')
 
   # Handle missing states
   all_states = pd.DataFrame(df['state'].unique(), columns=['state'])
-  high_growth_states = all_states.merge(high_growth_states, on='state', how='left').fillna({
+  all_growth_states = all_states.merge(all_growth_states, on='state', how='left').fillna({
     'growth_rate': 0,
     'predicted_growth_category': 0,
     'sale_amount': 0
@@ -107,7 +109,7 @@ def optimize_territories(file):
 
   # Create interactive choropleth map
   fig = px.choropleth(
-      high_growth_states,
+      all_growth_states,
       locations='state',
       locationmode='USA-states',
       color='predicted_growth_category_count',
@@ -115,14 +117,14 @@ def optimize_territories(file):
       scope='usa',
       hover_name='state',
       hover_data={'growth_rate': ':.2f', 'sale_amount': ':.2f'},
-      title='Predicted High Growth States with Growth Rates'
+      title='Predicted Growth States with Growth Rates'
   )
 
   # Updating hover template for better readability
   fig.update_traces(
     hovertemplate=(
       '<b>State:</b> %{hovertext}<br>'
-      '<b>Predicted High-Growth Count:</b> %{z}<br>'
+      '<b>Growth Count:</b> %{z}<br>'
       '<b>Avg Growth Rate (%):</b> %{customdata[0]:.2%}<br>'
       '<b>Total Sales Amount:</b> $%{customdata[1]:,.2f}'
     ),
