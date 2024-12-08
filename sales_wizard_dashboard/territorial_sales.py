@@ -78,6 +78,7 @@ def optimize_territories(file):
 
   # Create 'growth_rate_percentage'
   high_growth_states['growth_rate_percentage'] = high_growth_states['growth_rate'] * 100
+  
   # Normalize growth rate for easier visualization
   high_growth_states['normalized_growth_rate'] = (
     high_growth_states['growth_rate_percentage'] - high_growth_states['growth_rate_percentage'].min()
@@ -101,7 +102,7 @@ def optimize_territories(file):
       color_continuous_scale='Greens',
       scope='usa',
       hover_name='state',
-      hover_data={'growth_rate_percentage': ':.2f', 'sale_amount': True},
+      hover_data={'growth_rate_percentage': ':.2f', 'sale_amount': ':.2f'},
       title='Predicted High Growth States with Growth Rates'
   )
 
@@ -112,7 +113,8 @@ def optimize_territories(file):
       '<b>Predicted High-Growth Count:</b> %{z}<br>'
       '<b>Avg Growth Rate (%):</b> %{customdata[0]:.2f}<br>'
       '<b>Total Sales Amount:</b> $%{customdata[1]:,.2f}'
-    )
+    ),
+    customdata=high_growth_states[['growth_rate_percentage', 'sale_amount']]
   )
 
   return fig
