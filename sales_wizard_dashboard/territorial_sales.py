@@ -50,30 +50,31 @@ def optimize_territories(file):
               'region_Pacific Northwest/Mountain', 'multiple_items']
   target = 'growth_category_encoded'
 
-  # Encode Target Variable
-  if target not in df.columns or df[target].dtype == 'object':
-    df['growth_category_encoded'] = LabelEncoder().fit_transform(df['growth_category'])
-
-  # Standardize numerical features
-  scaler = StandardScaler()
-  df[features] = scaler.fit_transform(df[features])
-
   # Apply PCA for dimensionality reduction with a 95% explained variance
   pca = PCA(n_components=0.95, random_state=42)
   df_pca = pca.fit_transform(df[features])
   df_pca = pd.DataFrame(df_pca)
+  
+  # Encode Target Variable
+  if target not in df.columns or df[target].dtype == 'object':
+    df['growth_category_encoded'] = LabelEncoder().fit_transform(df['growth_category'])
 
   #Split data into training and testing sets
   X = df_pca
-  y = target
+  y = df['growth_category_encoded']
   X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
+  # Standardize numerical features
+  scaler = StandardScaler()
+  X_train_scaled = scaler.fit_transform(X_train)
+  X_test_scaled = scaler.transform(X_test)
+  
   # Train Random Forest
   model = RandomForestClassifier(n_estimators=1000, max_depth=5, random_state=42)
-  model.fit(X_train, y_train)
+  model.fit(X_train_scaled, y_train)
 
   # Predict High Growth Categories
-  df['predicted_growth_category'] = model.predict(X)
+  df['predicted_growth_category'] = model.predict(X_test_scaled)
 
   # Filter High Growth predictions
   df_high_growth = df[df['predicted_growth_category'] == 1]
