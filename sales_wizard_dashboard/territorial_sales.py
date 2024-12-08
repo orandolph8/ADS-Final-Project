@@ -79,7 +79,7 @@ def optimize_territories(file):
   df_high_growth = df[df['predicted_growth_category'] == 1]
 
   # Calculate average growth rate percentage by state
-  average_growth_by_state = df_high_growth.groupby('state')['growth_rate'].mean() * 100
+  average_growth_by_state = df_high_growth.groupby('state')['growth_rate'].mean()
 
   # Calculate total sales by state
   total_sales_by_state = df_high_growth.groupby('state')['sale_amount'].sum()
