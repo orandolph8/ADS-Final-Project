@@ -28,6 +28,15 @@ def optimize_territories(file):
   df['date_of_sale'] = pd.to_datetime(df['date_of_sale'])
   df['year_month'] = df['date_of_sale'].dt.to_period('M') # Extract only year and month
 
+  # Calculate growth rate by region and time
+  regional_sales = df.groupby(['state', 'year_month'])['sale_amount'].sum().reset_index()
+  regional_sales['growth_rate'] = regional_sales.groupby('state')['sale_amount'].pct_change() * 100
+  regional_sales['growth_rate'] = regional_sales['growth_rate'].fillna(0) # Replace NaN growth rates with 0
+  
+   # Merge growth_rate back into original dataframe
+  df = df.merge(
+    regional_sales[['state', 'growth_rate']], on='state', how='left')
+  
   # Handle missing growth rate values
   df['growth_rate'].fillna(0, inplace=True)
   
@@ -78,15 +87,6 @@ def optimize_territories(file):
     'sale_amount': 'sum', # Total sales amount for high-growth states
     'predicted_growth_category': 'count' # Number of high-growth predictions
   }).reset_index()
-
-   # Calculate growth rate by region and time
-  regional_sales = df.groupby(['state', 'year_month'])['sale_amount'].sum().reset_index()
-  regional_sales['growth_rate'] = regional_sales.groupby('state')['sale_amount'].pct_change() * 100
-  regional_sales['growth_rate'] = regional_sales['growth_rate'].fillna(0) # Replace NaN growth rates with 0
-
-  # Merge growth_rate back into original dataframe
-  high_growth_states = high_growth_states.merge(
-    regional_sales[['state', 'growth_rate']], on='state', how='left')
 
   # Create 'growth_rate_percentage'
   high_growth_states['growth_rate_percentage'] = high_growth_states['growth_rate'] * 100
