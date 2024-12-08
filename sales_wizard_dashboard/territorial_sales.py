@@ -81,10 +81,10 @@ def optimize_territories(file):
   df.loc[X_test.index, 'predicted_growth_category'] = y_pred
 
   # Calculate average growth rate percentage by state
-  average_growth_by_state = df_high_growth.groupby('state')['growth_rate'].mean()
+  average_growth_by_state = df.groupby('state')['growth_rate'].mean()
 
   # Calculate total sales by state
-  total_sales_by_state = df_high_growth.groupby('state')['sale_amount'].sum()
+  total_sales_by_state = df.groupby('state')['sale_amount'].sum()
 
   # Merge into DataFrame
   all_growth_states = pd.DataFrame({
