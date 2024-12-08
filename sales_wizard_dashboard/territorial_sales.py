@@ -110,7 +110,8 @@ def optimize_territories(file):
     hovertemplate=(
       '<b>State:</b> %{hovertext}<br>'
       '<b>Predicted High-Growth Count:</b> %{z}<br>'
-      '<b>Avg Growth Rate (%):</b> %{customdata[0]:.2f}'
+      '<b>Avg Growth Rate (%):</b> %{customdata[0]:.2f}<br>'
+      '<b>Total Sales Amount:</b> $%{customdata[1]:,.2f}'
     )
   )
 
