@@ -27,6 +27,10 @@ def optimize_territories(file):
   # Categorize growth into high and low with quantiles
   df['growth_category'] = pd.qcut(df['growth_rate'], q=2, labels=['Low Growth', 'High Growth'])
 
+  # One-Hot Encoding for 'region' column
+  region_dummies = pd.get_dummies(df['region'], prefix='region')
+  df = pd.concat([df, region_dummies], axis=1)
+  
   # Define Features and Target
   features = ['quantity_sold', 'price_per_unit', 'growth_rate', 'sale_amount',
               'region_West', 'region_South', 'region_Northeast',
