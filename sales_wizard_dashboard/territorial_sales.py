@@ -24,7 +24,7 @@ def optimize_territories(file):
   # Define Features and Target
   features = ['quantity_sold', 'price_per_unit', 'growth_rate', 'sale_amount',
               'region_West', 'region_South', 'region_Northeast',
-              'region_Pacific Northwest/Mountain', 'multiple_itmes']
+              'region_Pacific Northwest/Mountain', 'multiple_items']
   target = 'growth_category_encoded'
 
   # Encode Target Variable
