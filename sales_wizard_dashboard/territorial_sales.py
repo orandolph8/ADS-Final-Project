@@ -72,7 +72,8 @@ def optimize_territories(file):
   # Filter High Growth predictions
   high_growth_states = df[df['predicted_growth_category'] == 1].groupby('state').agg({
     'growth_rate': 'mean', # Average growth rate for high-growth states
-    'predicted_growth_category': 'count' # Number of high-growth predictions
+    'predicted_growth_category': 'count', # Number of high-growth predictions
+    'sale_amount': 'sum' # Total sales amount for high-growth states
   }).reset_index()
 
   # Create 'growth_rate_percentage'
@@ -87,7 +88,8 @@ def optimize_territories(file):
   high_growth_states = all_states.merge(high_growth_states, on='state', how='left').fillna({
     'growth_rate': 0,
     'growth_rate_percentage': 0,
-    'predicted_growth_category': 0
+    'predicted_growth_category': 0,
+    'sale_amount': 0
   })
 
   # Create interactive choropleth map
