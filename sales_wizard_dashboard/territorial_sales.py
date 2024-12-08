@@ -37,25 +37,21 @@ def optimize_territories(file):
   df = df.merge(
     regional_sales[['state', 'growth_rate']], on='state', how='left')
   
-  # Handle missing growth rate values
-  df['growth_rate'].fillna(0, inplace=True)
-  
   # Categorize growth into high and low with quantiles
   df['growth_category'] = pd.qcut(df['growth_rate'], q=2, labels=['Low Growth', 'High Growth'])
 
   # One-Hot Encoding for 'region' column
   region_dummies = pd.get_dummies(df['region'], prefix='region')
   df = pd.concat([df, region_dummies], axis=1)
-  
-  # Define Features and Target
-  features = ['quantity_sold', 'price_per_unit', 'growth_rate', 'sale_amount',
-              'region_West', 'region_South', 'region_Northeast',
-              'region_Pacific Northwest/Mountain', 'multiple_items']
-  target = 'growth_category_encoded'
 
   # Encode Target Variable
   if target not in df.columns or df[target].dtype == 'object':
     df['growth_category_encoded'] = LabelEncoder().fit_transform(df['growth_category'])
+  
+  # Define Features
+  features = ['quantity_sold', 'price_per_unit', 'growth_rate', 'sale_amount',
+              'region_West', 'region_South', 'region_Northeast',
+              'region_Pacific Northwest/Mountain', 'multiple_items']
 
   # Standardize numerical features
   scaler = StandardScaler()
@@ -68,7 +64,7 @@ def optimize_territories(file):
 
   #Split data into training and testing sets
   X = df_pca
-  y = df[target]
+  y = df['growth_category_encoded']
   X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
   # Train Random Forest
