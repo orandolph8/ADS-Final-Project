@@ -78,7 +78,10 @@ def optimize_territories(file):
   df['predicted_growth_category'] = model.predict(X)
 
   # Filter High Growth predictions
-  high_growth_states = df[df['predicted_growth_category'] == 1].groupby('state').agg({
+  high_growth_states = df[df['predicted_growth_category'] == 1]
+
+  # Aggregate sales amount by state
+  high_growth_states = high_growth_states.groupby('state').agg({
     'growth_rate': 'mean', # Average growth rate for high-growth states
     'predicted_growth_category': 'count', # Number of high-growth predictions
     'sale_amount': 'sum' # Total sales amount for high-growth states
