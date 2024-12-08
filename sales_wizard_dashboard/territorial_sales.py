@@ -74,7 +74,10 @@ def optimize_territories(file):
   model.fit(X_train_scaled, y_train)
 
   # Predict High Growth Categories
-  df['predicted_growth_category'] = model.predict(X_test_scaled)
+  y_pred = model.predict(X_test_scaled)
+
+  # Udpate only rows in df corresponding to test set
+  df.loc[X_test.index, 'predicted_growth_category'] = y_pred
 
   # Filter High Growth predictions
   df_high_growth = df[df['predicted_growth_category'] == 1]
