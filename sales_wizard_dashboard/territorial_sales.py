@@ -117,7 +117,7 @@ def optimize_territories(file):
       scope='usa',
       hover_name='state',
       hover_data={'growth_rate': ':.2f', 'sale_amount': ':.2f'},
-      title='Predicted Growth States with Growth Rates'
+      title='Predicted Growth States'
   )
 
   # Updating hover template for better readability
