@@ -7,6 +7,7 @@ from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.decomposition import PCA
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+from sklearn.model_selection import GridSearchCV
 
 # Define Healthcare Sales Territory Optimization function
 def optimize_territories(file):
@@ -74,15 +75,40 @@ def optimize_territories(file):
   # Train XGBoost Classifier
   model = XGBClassifier(
     n_estimators=1000, 
-    max_depth=5, 
-    learning_rate=0.1,
+    max_depth=7, 
+    learning_rate=0.05,
     random_state=42,
+    gamma=0.1,
     use_label_encoder=False,
+    subsample=0.8,
+    reg_lambda=1,
+    alpha=0,
     eval_metric='logloss')
-  model.fit(X_train_scaled, y_train)
 
-  # Predict High Growth Categories
-  y_pred = model.predict(X_test_scaled)
+  # Define parameter grid
+  param_grid = {
+    'max_depth': [3, 5, 7],
+    'learning_rate': [0.01, 0.1, 0.2],
+    'n_estimators': [100, 500, 1000],
+    'subsample': [0.8, 1.0],
+    'colsample_bytree': [0.8, 1.0]
+  }
+
+  # Initialize GridSearchCV
+  grid_search = GridSearchCV(estimator=model, param_grid=param_grid, cv=3, scoring='accuracy')
+  grid_search.fit(X_train_scaled, y_train)
+
+  # Print best params
+  print('Best Parameters:', grid_search.best_params_)
+
+  # Use best params
+  best_model = grid_search.best_estimator_
+
+  #Train best model
+  best_model.fit(X_train_scaled, y_train)
+
+  # Predict with best model
+  y_pred = best_model.predict(X_test_scaled)
 
   # Calculate Model Metrics
   accuracy = accuracy_score(y_test, y_pred)
