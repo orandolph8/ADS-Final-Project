@@ -27,7 +27,7 @@ def optimize_territories(file):
 
   # Calculate growth rate by state and time
   state_sales = df.groupby(['state', 'year_month'])['sale_amount'].sum().reset_index()
-  state_sales['growth_rate'] = state_sales.groupby('state')['sale_amount'].pct_change() * 100
+  state_sales['growth_rate'] = state_sales.groupby('state')['sale_amount'].pct_change()
   state_sales['growth_rate'] = state_sales['growth_rate'].fillna(0) # Replace NaN growth rates with 0
   
    # Merge growth_rate back into original dataframe
