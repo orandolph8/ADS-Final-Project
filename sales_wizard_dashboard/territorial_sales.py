@@ -90,7 +90,7 @@ def optimize_territories(file):
   }).reset_index()
 
   # Create 'growth_rate_percentage'
-  high_growth_states['growth_rate_percentage'] = high_growth_states['growth_rate'] * 100
+  high_growth_states['growth_rate_percentage'] = high_growth_states['growth_rate']
   
   # Normalize growth rate for easier visualization
   high_growth_states['normalized_growth_rate'] = (
@@ -124,7 +124,7 @@ def optimize_territories(file):
     hovertemplate=(
       '<b>State:</b> %{hovertext}<br>'
       '<b>Predicted High-Growth Count:</b> %{z}<br>'
-      '<b>Avg Growth Rate (%):</b> %{customdata[0]:.2f}<br>'
+      '<b>Avg Growth Rate (%):</b> %{customdata[0]:.2%}<br>'
       '<b>Total Sales Amount:</b> $%{customdata[1]:,.2f}'
     ),
     customdata=high_growth_states[['growth_rate_percentage', 'sale_amount']]
