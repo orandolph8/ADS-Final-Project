@@ -77,7 +77,7 @@ def optimize_territories(file):
 
   # Normalize growth rate for easier visualization
   high_growth_states['normalized_growth_rate'] = (
-    high_growth_states['growth_rate_percentage'] - high_growth_states['growth_rate_percentage'.min()
+    high_growth_states['growth_rate_percentage'] - high_growth_states['growth_rate_percentage'].min()
   ) / (high_growth_states['growth_rate_percentage'].max() - high_growth_states['growth_rate_percentage'].min())
 
   # Handle missing states
