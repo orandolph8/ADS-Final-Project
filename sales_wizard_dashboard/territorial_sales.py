@@ -23,10 +23,6 @@ def optimize_territories(file):
                  for state, region in state_to_region.items()]
   state_sales_df = pd.DataFrame(state_sales)
 
-  # Handle missing states and sales amounts
-  all_states = pd.DataFrame(df['state'].unique(), columns=['state'])
-  state_sales_df = all_states.merge(state_sales_df, on='state', how='left').fillna(0)
-
   # Convert 'date_of_sale' to datetime for time series analysis
   df['date_of_sale'] = pd.to_datetime(df['date_of_sale'])
   df['year_month'] = df['date_of_sale'].dt.to_period('M') # Extract only year and month
@@ -73,19 +69,42 @@ def optimize_territories(file):
   df['predicted_growth_category'] = model.predict(X)
 
   # Filter High Growth predictions
-  high_growth_states = df[df['predicted_growth_category'] == 1].groupby('state')['sale_amount'].sum().reset_index()
+  high_growth_states = df[df['predicted_growth_category'] == 1].groupby('state').agg({
+    'growth_rate': 'mean', # Average growth rate for high-growth states
+    'predicted_growth_category': 'count' # Number of high-growth predictions
+  }).reset_index()
+
+  # Normalize growth rate for easier visualization
+  high_growth_states['growth_rate_percentage'] = high_growth_states['growth_rate'] * 100
+
+  # Handle missing states
+  all_states = pd.DataFrame(df['state'].unique(), columns=['state'])
+  high_growth_states = all_states.merge(high_growth_states, on='state', how='left').fillna({
+    'growth_rate': 0,
+    'growth_rate_percentage': 0,
+    'predicted_growth_category': 0
+  })
 
   # Create interactive choropleth map
   fig = px.choropleth(
       high_growth_states,
       locations='state',
       locationmode='USA-states',
-      color='sale_amount',
-      color_continuous_scale='Viridis',
+      color='predicted_growth_category',
+      color_continuous_scale='Greens',
       scope='usa',
       hover_name='state',
-      hover_data=['sale_amount'],
-      title='Predicted High Growth Sales by State'
+      hover_data={'growth_rate_percentage': ':.2f'},
+      title='Predicted High Growth States with Growth Rates'
+  )
+
+  # Updating hover template for better readability
+  fig.update_traces(
+    hovertemplate=(
+      '<b>State:</b> %{hovertext}<br>'
+      '<b>Predicted High-Growth Count:</b> %{z}<br>'
+      '<b>Avg Growth Rate (%):</b> %{customdata[0]:.2f}'
+    )
   )
 
   return fig
