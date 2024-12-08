@@ -52,6 +52,7 @@ def optimize_territories(file):
   features = ['quantity_sold', 'price_per_unit', 'growth_rate', 'sale_amount',
               'region_West', 'region_South', 'region_Northeast',
               'region_Pacific Northwest/Mountain', 'multiple_items']
+  target = 'growth_category_encoded'
 
   # Standardize numerical features
   scaler = StandardScaler()
@@ -64,7 +65,7 @@ def optimize_territories(file):
 
   #Split data into training and testing sets
   X = df_pca
-  y = df['growth_category_encoded']
+  y = target
   X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
   # Train Random Forest
