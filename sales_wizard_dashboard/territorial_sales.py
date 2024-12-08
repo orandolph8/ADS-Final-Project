@@ -6,7 +6,7 @@ from xgboost import XGBClassifier
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.decomposition import PCA
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+from sklearn.metrics import accuracy_score
 from sklearn.model_selection import GridSearchCV
 
 # Define Healthcare Sales Territory Optimization function
@@ -110,6 +110,9 @@ def optimize_territories(file):
   # Predict with best model
   y_pred = best_model.predict(X_test_scaled)
 
+  # Calculate Accuracy
+  accuracy = accuracy_score(y_test, y_pred)
+
   # Udpate only rows in df corresponding to test set
   df.loc[X_test.index, 'predicted_growth_category'] = y_pred
 
@@ -164,4 +167,4 @@ def optimize_territories(file):
     customdata=all_growth_states[['growth_rate', 'sale_amount']]
   )
 
-  return fig, best_params
+  return fig, best_params, accuracy
