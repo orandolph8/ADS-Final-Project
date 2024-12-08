@@ -15,39 +15,35 @@ def optimize_territories(file):
   # Extract 'state' from 'address' column
   df['state'] = df['address'].str.split(', ').str[-1]
 
+  # Ensure 'state' column is clean
+  df['state'] = df['state'].str.strip()
+
   # Map states to regions
   state_to_region = df[['state', 'region']].drop_duplicates().set_index('state')['region'].to_dict()
-
-  # Map and aggregate sales
-  region_sales = df.groupby('region')['sale_amount'].sum()
-  state_sales = [{'state': state, 'sale_amount': region_sales[region]}
-                 for state, region in state_to_region.items()]
-  state_sales_df = pd.DataFrame(state_sales)
 
   # Convert 'date_of_sale' to datetime for time series analysis
   df['date_of_sale'] = pd.to_datetime(df['date_of_sale'])
   df['year_month'] = df['date_of_sale'].dt.to_period('M') # Extract only year and month
 
-  # Calculate growth rate by region and time
-  regional_sales = df.groupby(['state', 'year_month'])['sale_amount'].sum().reset_index()
-  regional_sales['growth_rate'] = regional_sales.groupby('state')['sale_amount'].pct_change() * 100
-  regional_sales['growth_rate'] = regional_sales['growth_rate'].fillna(0) # Replace NaN growth rates with 0
+  # Calculate growth rate by state and time
+  state_sales = df.groupby(['state', 'year_month'])['sale_amount'].sum().reset_index()
+  state_sales['growth_rate'] = state_sales.groupby('state')['sale_amount'].pct_change() * 100
+  state_sales['growth_rate'] = state_sales['growth_rate'].fillna(0) # Replace NaN growth rates with 0
   
    # Merge growth_rate back into original dataframe
   df = df.merge(
-    regional_sales[['state', 'growth_rate']], on='state', how='left')
+    state_sales[['state', 'growth_rate']], on='state', how='left')
   
   # Categorize growth into high and low with quantiles
   df['growth_category'] = pd.qcut(df['growth_rate'], q=2, labels=['Low Growth', 'High Growth'])
 
-  # One-Hot Encoding for 'region' column
-  region_dummies = pd.get_dummies(df['region'], prefix='region')
-  df = pd.concat([df, region_dummies], axis=1)
+  # One-Hot Encoding for 'state' column
+  state_dummies = pd.get_dummies(df['state'], prefix='state')
+  df = pd.concat([df, state_dummies], axis=1)
   
   # Define Features
   features = ['quantity_sold', 'price_per_unit', 'growth_rate', 'sale_amount',
-              'region_West', 'region_South', 'region_Northeast',
-              'region_Pacific Northwest/Mountain', 'multiple_items']
+              'multiple_items'] + list(state_dummies.columns)
   target = 'growth_category_encoded'
 
   # Apply PCA for dimensionality reduction with a 95% explained variance
