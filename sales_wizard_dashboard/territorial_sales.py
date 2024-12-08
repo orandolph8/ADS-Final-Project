@@ -30,6 +30,7 @@ def optimize_territories(file):
   # Calculate growth rate by region and time
   regional_sales = df.groupby(['region', 'year_month'])['sale_amount'].sum().reset_index()
   regional_sales['growth_rate'] = regional_sales.groupby('region')['sale_amount'].pct_change() * 100
+  regional_sales['growth_rate'] = regional_sales['growth_rate'].fillna(0) # Replace NaN growth rates with 0
 
   # Merge growth_rate back into original dataframe
   df = df.merge(regional_sales[['region', 'year_month', 'growth_rate']], on=['region', 'year_month'], how='left')
@@ -75,7 +76,9 @@ def optimize_territories(file):
   }).reset_index()
 
   # Normalize growth rate for easier visualization
-  high_growth_states['growth_rate_percentage'] = high_growth_states['growth_rate'] * 100
+  high_growth_states['normalized_growth_rate'] = (
+    high_growth_states['growth_rate_percentage'] - high_growth_states['growth_rate_percentage'.min()
+  ) / (high_growth_states['growth_rate_percentage'].max() - high_growth_states['growth_rate_percentage'].min())
 
   # Handle missing states
   all_states = pd.DataFrame(df['state'].unique(), columns=['state'])
@@ -94,7 +97,7 @@ def optimize_territories(file):
       color_continuous_scale='Greens',
       scope='usa',
       hover_name='state',
-      hover_data={'growth_rate_percentage': ':.2f'},
+      hover_data={'growth_rate_percentage': ':.2f', 'sale_amount': True},
       title='Predicted High Growth States with Growth Rates'
   )
 
