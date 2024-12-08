@@ -105,19 +105,19 @@ def territorial_sales_module(uploaded_file):
 
     try:
         # Generate choropleth map    
-        fig, accuracy, precision, recall, f1 = optimize_territories(uploaded_file)
+        territorial_sales_results, best_params, accuracy = optimize_territories(uploaded_file)
 
         # Display map
         st.subheader('Predicted Growth Sales by State')
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(territorial_sales_results)
 
-        # Display model performance metrics
-        st.subheader('Model Performance Metrics')
-        col1, col2, col3, col4 = st.columns(4)
-        col1.metric(label='Accuracy', value=f'{accuracy:.2%}')
-        col2.metric(label='Precision', value=f'{precision:.2%}')
-        col3.metric(label='Recall', value=f'{recall:.2%}')
-        col4.metric(label='F1 Score', value=f'{f1:.2%}')
+        # Display best hyperparameters
+        st.subheader('Best Hyperparameters')
+        st.write(best_params)
+
+        # Display accuracy
+        st.subheader('Model Accuracy')
+        st.write(f'Accuracy: {accuracy * 100:.2f}%')
 
     except Exception as e:
         
