@@ -2,7 +2,7 @@
 from sklearn.cluster import KMeans
 import pandas as pd
 import plotly.express as px
-from sklearn.ensemble import RandomForestClassifier
+from xgboost import XGBClassifier
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.decomposition import PCA
@@ -71,8 +71,14 @@ def optimize_territories(file):
   X_train_scaled = scaler.fit_transform(X_train)
   X_test_scaled = scaler.transform(X_test)
   
-  # Train Random Forest
-  model = RandomForestClassifier(n_estimators=1000, max_depth=5, random_state=42)
+  # Train XGBoost Classifier
+  model = XGBClassifier(
+    n_estimators=1000, 
+    max_depth=5, 
+    learning_rate=0.1,
+    random_state=42,
+    use_label_encoder=False,
+    eval_metric='logloss')
   model.fit(X_train_scaled, y_train)
 
   # Predict High Growth Categories
