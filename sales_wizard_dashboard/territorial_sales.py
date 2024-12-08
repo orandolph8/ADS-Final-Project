@@ -11,6 +11,8 @@ def optimize_territories(file):
   #Upload File
   df = pd.read_csv(file)
 
+  # Categorize growth into high and low with quantiles
+  df['growth_category'] = pd.qcut(df['growth_rate'], q=2, labels=['Low Growth', 'High Growth'])
 
   # Define Features and Target
   features = ['quantity_sold', 'price_per_unit', 'growth_rate', 'sale_amount',
