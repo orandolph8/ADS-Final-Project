@@ -110,12 +110,6 @@ def optimize_territories(file):
   # Predict with best model
   y_pred = best_model.predict(X_test_scaled)
 
-  # Calculate Model Metrics
-  accuracy = accuracy_score(y_test, y_pred)
-  precision = precision_score(y_test, y_pred, average='weighted')
-  recall = recall_score(y_test, y_pred, average='weighted')
-  f1 = f1_score(y_test, y_pred, average='weighted')
-
   # Udpate only rows in df corresponding to test set
   df.loc[X_test.index, 'predicted_growth_category'] = y_pred
 
@@ -170,4 +164,4 @@ def optimize_territories(file):
     customdata=all_growth_states[['growth_rate', 'sale_amount']]
   )
 
-  return fig, accuracy, precision, recall, f1
+  return fig, best_params
