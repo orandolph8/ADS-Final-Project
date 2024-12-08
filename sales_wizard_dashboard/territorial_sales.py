@@ -99,7 +99,8 @@ def optimize_territories(file):
   grid_search.fit(X_train_scaled, y_train)
 
   # Print best params
-  print('Best Parameters:', grid_search.best_params_)
+  best_params = grid_search.best_params_
+  print('Best Parameters:', best_params_)
 
   # Use best params
   best_model = grid_search.best_estimator_
