@@ -6,6 +6,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.decomposition import PCA
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 
 # Define Healthcare Sales Territory Optimization function
 def optimize_territories(file):
@@ -77,6 +78,12 @@ def optimize_territories(file):
   # Predict High Growth Categories
   y_pred = model.predict(X_test_scaled)
 
+  # Calculate Model Metrics
+  accuracy = accuracy_score(y_test, y_pred)
+  precision = precision_score(y_test, y_pred, average='weighted')
+  recall = recall_score(y_test, y_pred, average='weighted')
+  f1 = f1_score(y_test, y_pred, average='weighted')
+
   # Udpate only rows in df corresponding to test set
   df.loc[X_test.index, 'predicted_growth_category'] = y_pred
 
@@ -131,4 +138,4 @@ def optimize_territories(file):
     customdata=all_growth_states[['growth_rate', 'sale_amount']]
   )
 
-  return fig
+  return fig, accuracy, precision, recall, f1
