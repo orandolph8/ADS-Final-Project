@@ -4,6 +4,7 @@ import plotly.express as px
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.model_selection import train_test_split
+from sklearn.decomposition import PCA
 
 # Define Healthcare Sales Territory Optimization function
 def optimize_territories(file):
@@ -35,6 +36,9 @@ def optimize_territories(file):
   # Merge growth_rate back into original dataframe
   df = df.merge(regional_sales[['region', 'year_month', 'growth_rate']], on=['region', 'year_month'], how='left')
 
+  # Handle missing growth rate values
+  df['growth_rate'].fillna(0, inplace=True)
+  
   # Categorize growth into high and low with quantiles
   df['growth_category'] = pd.qcut(df['growth_rate'], q=2, labels=['Low Growth', 'High Growth'])
 
@@ -52,13 +56,17 @@ def optimize_territories(file):
   if target not in df.columns or df[target].dtype == 'object':
     df['growth_category_encoded'] = LabelEncoder().fit_transform(df['growth_category'])
 
-
   # Standardize numerical features
   scaler = StandardScaler()
   df[features] = scaler.fit_transform(df[features])
 
+  # Apply PCA for dimensionality reduction with a 95% explained variance
+  pca = PCA(n_components=0.95, random_state=42)
+  df_pca = pca.fit_transform(df[features])
+  df_pca = pd.DataFrame(df_pca)
+
   #Split data into training and testing sets
-  X = df[features]
+  X = df_pca
   y = df[target]
   X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
