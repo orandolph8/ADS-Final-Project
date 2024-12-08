@@ -11,14 +11,28 @@ def optimize_territories(file):
   #Upload File
   df = pd.read_csv(file)
 
-  # Convert 'date_of_sale' to datetime
+  # Extract 'state' from 'address' column
+  df['state'] = df['address'].str.split(', ').str[-1]
+
+  # Map states to regions
+  state_to_region = df[['state', 'region']].drop_duplicates().set_index('state')['region'].to_dict()
+
+  # Map and aggregate sales
+  region_sales = df.groupby('region')['sale_amount'].sum()
+  state_sales = [{'state': state, 'sale_amount': region_sales[region]}
+                 for state, region in state_to_region.items()]
+  state_sales_df = pd.DataFrame(state_sales)
+
+  # Handle missing states and sales amounts
+  all_states = pd.DataFrame(df['state'].unique(), columns=['state'])
+  state_sales_df = all_states.merge(state_sales_df, on='state', how='left').fillna(0)
+
+  # Convert 'date_of_sale' to datetime for time series analysis
   df['date_of_sale'] = pd.to_datetime(df['date_of_sale'])
-
-  # Group by region and year_month
   df['year_month'] = df['date_of_sale'].dt.to_period('M') # Extract only year and month
-  regional_sales = df.groupby(['region', 'year_month'])['sale_amount'].sum().reset_index()
 
-  # Calculate percentage change for growth_rate
+  # Calculate growth rate by region and time
+  regional_sales = df.groupby(['region', 'year_month'])['sale_amount'].sum().reset_index()
   regional_sales['growth_rate'] = regional_sales.groupby('region')['sale_amount'].pct_change() * 100
 
   # Merge growth_rate back into original dataframe
