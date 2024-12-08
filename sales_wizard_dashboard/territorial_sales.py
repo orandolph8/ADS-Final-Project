@@ -11,6 +11,19 @@ def optimize_territories(file):
   #Upload File
   df = pd.read_csv(file)
 
+  # Convert 'date_of_sale' to datetime
+  df['date_of_sale'] = pd.to_datetime(df['date_of_sale'])
+
+  # Group by region and year_month
+  df['year_month'] = df['date_of_sale'].dt.to_period('M') # Extract only year and month
+  regional_sales = df.groupby(['region', 'year_month'])['sale_amount'].sum().reset_index()
+
+  # Calculate percentage change for growth_rate
+  regional_sales['growth_rate'] = regional_sales.groupby('region')['sale_amount'].pct_change() * 100
+
+  # Merge growth_rate back into original dataframe
+  df = df.merge(regional_sales[['region', 'year_month', 'growth_rate']], on=['region', 'year_month'], how='left')
+
   # Categorize growth into high and low with quantiles
   df['growth_category'] = pd.qcut(df['growth_rate'], q=2, labels=['Low Growth', 'High Growth'])
 
