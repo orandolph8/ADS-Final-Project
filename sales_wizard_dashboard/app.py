@@ -5,7 +5,7 @@ import seaborn as sns
 
 from product_bundling import generate_bundles
 from product_pricing import predict_pricing
-# from territorial_sales import optimize_territories
+from territorial_sales import optimize_territories
 from lead_scoring import score_leads
 
 def main():
@@ -102,10 +102,18 @@ def product_bundling_module(uploaded_file):
 
 def territorial_sales_module(uploaded_file):
     st.header("Territorial Sales Optimization Module")
-    
-    # territorial_sales_results = optimize_territories(uploaded_file)
-    # st.write(territorial_sales_results)
-    st.write("Territorial sales optimization logic will be displayed here")
+
+    try:
+        # Generate choropleth map    
+        territorial_sales_results = optimize_territories(uploaded_file)
+
+        # Display map
+        st.subheader('Predicted High Growth Sales by State')
+        st.plotly_chart(territorial_sales_results)
+
+    except Exception as e:
+        
+        st.error(f'An error occurred while processing the file: {e}')
 
 def lead_scoring_module(uploaded_file):
     st.header("Lead Scoring Module")
