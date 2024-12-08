@@ -100,7 +100,7 @@ def optimize_territories(file):
 
   # Print best params
   best_params = grid_search.best_params_
-  print('Best Parameters:', best_params_)
+  print('Best Parameters:', best_params)
 
   # Use best params
   best_model = grid_search.best_estimator_
