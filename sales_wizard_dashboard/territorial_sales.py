@@ -128,7 +128,7 @@ def optimize_territories(file):
       '<b>Avg Growth Rate (%):</b> %{customdata[0]:.2%}<br>'
       '<b>Total Sales Amount:</b> $%{customdata[1]:,.2f}'
     ),
-    customdata=high_growth_states[['growth_rate', 'sale_amount']]
+    customdata=all_growth_states[['growth_rate', 'sale_amount']]
   )
 
   return fig
