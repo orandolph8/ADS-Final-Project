@@ -82,21 +82,29 @@ def optimize_territories(file):
   # Filter High Growth predictions
   df_high_growth = df[df['predicted_growth_category'] == 1]
 
-  # Aggregate sales amount by state
-  high_growth_states = df_high_growth.groupby('state').agg({
-    'growth_rate': 'mean', # Average growth rate for high-growth states
-    'sale_amount': 'sum', # Total sales amount for high-growth states
-    'predicted_growth_category': 'count' # Number of high-growth predictions
+  # Calculate average growth rate percentage by state
+  average_growth_by_state = df_high_growth.groupby('state')['growth_rate'].mean() * 100
+
+  # Calculate total sales by state
+  total_sales_by_state = df_high_growth.groupby('state')['sale_amount'].sum()
+
+  # Merge into DataFrame
+  high_growth_states = pd.DataFrame({
+    'growth_rate': average_growth_by_state,
+    'sale_amount': total_sales_by_state
   }).reset_index()
 
-  # Create 'growth_rate_percentage'
-  high_growth_states['growth_rate_percentage'] = high_growth_states['growth_rate']
+  # Aggregate count of high-growth predictions
+  high_growth_counts = df_high_growth.groupby('state')['predicted_growth_category'].count().reset_index()
+  high_growth_counts = high_growth_counts.rename(columns={'predicted_growth_category': 'predicted_growth_category_count'})
+
+  # Merge into main DataFrame
+  high_growth_states = pd.merge(high_growth_states, high_growth_counts, on='state', how='left')
 
   # Handle missing states
   all_states = pd.DataFrame(df['state'].unique(), columns=['state'])
   high_growth_states = all_states.merge(high_growth_states, on='state', how='left').fillna({
     'growth_rate': 0,
-    'growth_rate_percentage': 0,
     'predicted_growth_category': 0,
     'sale_amount': 0
   })
@@ -106,11 +114,11 @@ def optimize_territories(file):
       high_growth_states,
       locations='state',
       locationmode='USA-states',
-      color='predicted_growth_category',
+      color='predicted_growth_category_count',
       color_continuous_scale='Greens',
       scope='usa',
       hover_name='state',
-      hover_data={'growth_rate_percentage': ':.2f', 'sale_amount': ':.2f'},
+      hover_data={'growth_rate': ':.2f', 'sale_amount': ':.2f'},
       title='Predicted High Growth States with Growth Rates'
   )
 
@@ -122,7 +130,7 @@ def optimize_territories(file):
       '<b>Avg Growth Rate (%):</b> %{customdata[0]:.2%}<br>'
       '<b>Total Sales Amount:</b> $%{customdata[1]:,.2f}'
     ),
-    customdata=high_growth_states[['growth_rate_percentage', 'sale_amount']]
+    customdata=high_growth_states[['growth_rate', 'sale_amount']]
   )
 
   return fig
