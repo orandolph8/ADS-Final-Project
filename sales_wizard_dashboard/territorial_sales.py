@@ -5,6 +5,7 @@ import plotly.express as px
 from lightgbm import LGBMClassifier
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.model_selection import train_test_split
+from sklearn.decomposition import PCA
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import GridSearchCV
 
@@ -52,17 +53,17 @@ def optimize_territories(file):
               'multiple_items'] + list(state_dummies.columns)
   target = 'growth_category_encoded'
 
-  # Apply PCA for dimensionality reduction with a 95% explained variance
-  #pca = PCA(n_components=0.95, random_state=42)
-  #df_pca = pca.fit_transform(df[features])
-  #df_pca = pd.DataFrame(df_pca)
+  # Apply PCA for dimensionality reduction with 4 components
+  pca = PCA(n_components=4, random_state=42)
+  df_pca = pca.fit_transform(df[features])
+  df_pca = pd.DataFrame(df_pca)
   
   # Encode Target Variable
   if target not in df.columns or df[target].dtype == 'object':
     df['growth_category_encoded'] = LabelEncoder().fit_transform(df['growth_category'])
 
   #Split data into training and testing sets
-  X = df[features]
+  X = df_pca
   y = df['growth_category_encoded']
   X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
