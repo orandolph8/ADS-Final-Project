@@ -2,7 +2,7 @@
 from sklearn.cluster import KMeans
 import pandas as pd
 import plotly.express as px
-from xgboost import XGBClassifier
+from lightgbm import LGBMClassifier
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.decomposition import PCA
@@ -73,17 +73,15 @@ def optimize_territories(file):
   X_test_scaled = scaler.transform(X_test)
   
   # Train XGBoost Classifier
-  model = XGBClassifier(
+  model = LGBMClassifier(
     n_estimators=1000, 
     max_depth=7, 
     learning_rate=0.05,
     random_state=42,
-    gamma=0.1,
-    use_label_encoder=False,
     subsample=0.8,
     reg_lambda=1,
     alpha=0,
-    eval_metric='logloss')
+  )
 
   # Define parameter grid
   param_grid = {
@@ -95,7 +93,7 @@ def optimize_territories(file):
   }
 
   # Initialize GridSearchCV
-  grid_search = GridSearchCV(estimator=model, param_grid=param_grid, cv=3, scoring='accuracy')
+  grid_search = GridSearchCV(estimator=model, param_grid=param_grid, cv=5, scoring='accuracy')
   grid_search.fit(X_train_scaled, y_train)
 
   # Print best params
