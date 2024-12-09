@@ -9,23 +9,31 @@ from territorial_sales import optimize_territories
 from lead_scoring import score_leads
 
 # Add background image    
-def add_bg_from_local(image_file):
-    with open(image_file, 'rb') as image_file:
-        encoded_string = base64.b64encode(image_file.read())
+def add_background_image(image_path: str):
+    """
+    Adds a background image to the Streamlit app using custom CSS.
+
+    Parameters:
+    - image_path: Path to the background image file or an accessible URL.
+    """
     st.markdown(
-    f"""
-    <style>
-    .stApp{{
-        background-image: url(data:image/{'jpeg'};base64,{encoded_string.decode()});
-        background-size: cover;
-    }}
-    <style/>
-    """,
-    unsafe_allow_html=True
+        f"""
+        <style>
+        .stApp {{
+            background: url({image_path});
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }}
+        </style>
+        """,
+        unsafe_allow_html=True
     )
-add_bg_from_local('healthcare_products.jpeg')
 
 def main():
+    # Add background image
+    add_background_image('healthcare_products.jpeg')
+    
     st.title("Healthcare SalesWizard Dashboard")
 
     # Radio Buttons on the side for Module Selection
