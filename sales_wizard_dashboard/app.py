@@ -32,7 +32,7 @@ def add_background_image(image_path: str):
 
 def main():
     # Add background image
-    add_background_image('healthcare_products.jpeg')
+    add_background_image('sales_wizard_dashboard/healthcare_products.jpeg')
     
     st.title("Healthcare SalesWizard Dashboard")
 
