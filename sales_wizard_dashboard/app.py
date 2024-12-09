@@ -26,7 +26,27 @@ def add_bg_from_local(image_file):
     unsafe_allow_html=True
     )
 
+def set_font_color(main_color: str):
+    st.markdown(
+        f"""
+        <style>
+        /* Change font color for the main app content */
+        .stApp {{
+            color: {main_color};
+        }}
+        /* Exclude sidebar from the font color change */
+        section[data-testid="stSidebar"] * {{
+            color: inherit !important;
+        }}
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
 def main():
+    # Set font color for main app
+    set_font_color('blue')
+    
     # Add background image
     add_bg_from_local('healthcare_products.jpeg')
     
