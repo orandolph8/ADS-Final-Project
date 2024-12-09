@@ -46,7 +46,7 @@ def set_font_color(main_color: str):
 
 def main():
     # Set font color for main app
-    set_font_color('#333333')
+    set_font_color('#FFFFFF')
     
     # Add background image
     add_bg_from_local('healthcare_products_right.jpeg')
