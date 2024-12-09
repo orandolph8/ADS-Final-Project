@@ -126,10 +126,11 @@ def territorial_sales_module(uploaded_file):
 def lead_scoring_module(uploaded_file):
     st.header("Lead Scoring Module")
 
-    # Initialize variables
-    result_df = None
-    best_model_name = None
-    best_model_auc = None
+    # Initialize session state for results
+    if "result_df" not in st.session_state:
+        st.session_state.result_df = None
+    if "manual_entry_result" not in st.session_state:
+        st.session_state.manual_entry_result = None
 
     # Tabs for Input Options
     tab1, tab2 = st.tabs(["Upload CSV File", "Enter Lead Details Manually"])
@@ -137,19 +138,50 @@ def lead_scoring_module(uploaded_file):
     # Tab 1: Upload a CSV File
     with tab1:
         st.subheader("Upload a CSV File")
+
         if uploaded_file:
             try:
-                # Score leads using the uploaded file
-                result_df, best_model_name, best_model_auc = score_leads(uploaded_file)
+                # Process and score the uploaded CSV file
+                st.session_state.result_df, st.session_state.best_model_name, st.session_state.best_model_auc = score_leads(uploaded_file)
                 st.success("File processed successfully!")
             except Exception as e:
                 st.error(f"Error processing the file: {e}")
+
+        # Display results for the uploaded CSV file
+        if st.session_state.result_df is not None:
+            st.subheader("Prediction Results (CSV File)")
+
+            # Extract and display the first lead's probability and quality
+            first_probability = st.session_state.result_df.iloc[0]['probability_sales_qualified']
+            first_quality = st.session_state.result_df.iloc[0]['predicted_quality']
+            st.write(f"The lead has a probability of **{first_probability:.2f}** to be sales qualified, "
+                     f"which corresponds to a **{first_quality}** rating.")
+
+            # Display the full results DataFrame
+            st.dataframe(st.session_state.result_df)
+
+            # Include a note explaining classification rules
+            st.write("""
+                **Classification Rules:**
+                - High: Probability >= 0.5  
+                - Medium: Probability between 0.2 and 0.5  
+                - Low: Probability < 0.2
+            """)
+
+            # Option to download the results as a CSV
+            csv = st.session_state.result_df.to_csv(index=False)
+            st.download_button(
+                label="Download Results as CSV",
+                data=csv,
+                file_name="lead_scoring_results.csv",
+                mime="text/csv"
+            )
 
     # Tab 2: Manual Lead Entry
     with tab2:
         st.subheader("Enter Lead Details Manually")
 
-        # Dropdown input fields with predefined options
+        # Dropdown input fields for manual data entry
         business_unit = st.selectbox("Business Unit", ['business_unit_1', 'business_unit_2', 'business_unit_3', 'business_unit_4'])
         lead_contact = st.selectbox("Lead Contact", ['Contact', 'Lead'])
         job_level = st.selectbox("Job Level", ['Staff-Level', 'Unknown', 'Director-Level', 'Manager-Level', 'C-Level', 'Provider-Level', 'VP-Level'])
@@ -172,43 +204,42 @@ def lead_scoring_module(uploaded_file):
         # Button to score the manually entered lead
         if st.button("Score Lead"):
             try:
-                # Generate predictions for the manually entered lead
-                result_df, best_model_name, _ = score_leads(pd.DataFrame([user_inputs]))
+                # Perform scoring for manually entered lead data
+                input_df = pd.DataFrame([user_inputs])  # Convert user inputs to DataFrame
+                st.session_state.manual_entry_result, _, _ = score_leads(input_df)
                 st.success("Lead scored successfully!")
             except Exception as e:
                 st.error(f"Error: {e}")
 
-    # Display Results
-    if result_df is not None:
-        st.subheader("Prediction Results")
+        # Display results for the manually entered lead
+        if st.session_state.manual_entry_result is not None:
+            st.subheader("Prediction Results (Manual Entry)")
 
-        # Extract probability and predicted quality for the first lead
-        first_probability = result_df.iloc[0]['probability_sales_qualified']
-        first_quality = result_df.iloc[0]['predicted_quality']
+            # Extract probability and predicted quality for the first lead
+            first_probability = st.session_state.manual_entry_result.iloc[0]['probability_sales_qualified']
+            first_quality = st.session_state.manual_entry_result.iloc[0]['predicted_quality']
+            st.write(f"The lead has a probability of **{first_probability:.2f}** to be sales qualified, "
+                     f"which corresponds to a **{first_quality}** rating.")
 
-        # Explicitly display the prediction and quality for the first lead
-        st.write(f"The lead has a probability of **{first_probability:.2f}** to be sales qualified, "
-                 f"which corresponds to a **{first_quality}** rating.")
+            # Display the full results DataFrame
+            st.dataframe(st.session_state.manual_entry_result)
 
-        # Display the full results DataFrame
-        st.dataframe(result_df)
+            # Include a note explaining classification rules
+            st.write("""
+                **Classification Rules:**
+                - High: Probability >= 0.5  
+                - Medium: Probability between 0.2 and 0.5  
+                - Low: Probability < 0.2
+            """)
 
-        # Include a note explaining classification rules
-        st.write("""
-            **Classification Rules:**
-            - High: Probability >= 0.5  
-            - Medium: Probability between 0.2 and 0.5  
-            - Low: Probability < 0.2
-        """)
-
-        # Option to download the results as a CSV
-        csv = result_df.to_csv(index=False)
-        st.download_button(
-            label="Download Results as CSV",
-            data=csv,
-            file_name="lead_scoring_results.csv",
-            mime="text/csv"
-        )
+            # Option to download the results as a CSV
+            csv = st.session_state.manual_entry_result.to_csv(index=False)
+            st.download_button(
+                label="Download Results as CSV",
+                data=csv,
+                file_name="manual_lead_scoring_results.csv",
+                mime="text/csv"
+            )
 
 
 # Run the Streamlit app
