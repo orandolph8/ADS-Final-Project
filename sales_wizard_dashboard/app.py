@@ -28,7 +28,7 @@ def add_bg_from_local(image_file):
 
 def main():
     # Add background image
-    add_background_image('healthcare_products.jpeg')
+    add_bg_from_local('healthcare_products.jpeg')
     
     st.title("Healthcare SalesWizard Dashboard")
 
