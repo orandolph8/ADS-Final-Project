@@ -48,7 +48,7 @@ def main():
     set_font_color('red')
     
     # Add background image
-    add_bg_from_local('healthcare_products.jpeg')
+    add_bg_from_local('healthcare_products_2.jpeg')
     
     st.title("Healthcare SalesWizard Dashboard")
 
