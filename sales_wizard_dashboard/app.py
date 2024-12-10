@@ -10,16 +10,6 @@ from product_pricing import predict_pricing
 from territorial_sales import optimize_territories
 from lead_scoring import score_leads
 
-# Condense padding
-padding = 0
-st.markdown(f""" <style>
-    .reportview-container .main .block-container{{
-        padding-top: {padding}rem;
-        padding-right: {padding}rem;
-        padding-left: {padding}rem;
-        padding-bottom: {padding}rem;
-    }} </style> """, unsafe_allow_html=True)
-
 # Add background image    
 def add_bg_from_local(image_file):
     with open(image_file, 'rb') as image_file:
@@ -64,6 +54,25 @@ def set_font_color(main_color: str):
     )
 
 def main():
+    # Condense padding
+    padding = 0
+    st.markdown(f""" <style>
+        .reportview-container .main .block-container{{
+            padding-top: {padding}rem;
+            padding-right: {padding}rem;
+            padding-left: {padding}rem;
+            padding-bottom: {padding}rem;
+        }} </style> """, unsafe_allow_html=True)
+
+    # Update sidebar
+    updated_sidebar = '''
+        <style>
+        #stSidebarNav {
+        font-family: 'Showtime';
+        }
+        </style>
+        '''
+    
     # Set font color for main app
     set_font_color('#FFFFFF')
     
