@@ -2,7 +2,7 @@
 from sklearn.cluster import KMeans
 import pandas as pd
 import plotly.express as px
-from xgboost import XGBClassifier
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.decomposition import PCA
@@ -73,26 +73,21 @@ def optimize_territories(file):
   X_test_scaled = scaler.transform(X_test)
   
   # Train XGBoost Classifier
-  model = XGBClassifier(
+  model = RandomForestClassifier(
     n_estimators=1000, 
-    max_depth=7, 
-    learning_rate=0.05,
+    max_depth=None, 
     random_state=42,
-    gamma=0.1,
-    use_label_encoder=False,
-    subsample=0.8,
-    reg_lambda=1,
-    alpha=0,
-    eval_metric='logloss'
+    min_samples_split=2,
+    min_samples_leaf=1
   )
 
   # Define parameter grid
   param_grid = {
-    'max_depth': [3, 5, 7],
-    'learning_rate': [0.01, 0.1, 0.2],
-    'n_estimators': [100, 500, 1000],
-    'subsample': [0.8, 1.0],
-    'colsample_bytree': [0.8, 1.0]
+    'max_depth': [None, 10, 20],
+    'n_estimators': [100, 200, 500],
+    'min_samples_split': [2, 5, 10],
+    'min_samples_leaf': [1, 2, 4],
+    'bootstrap': [True, False]
   }
 
   # Initialize GridSearchCV
