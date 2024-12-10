@@ -106,7 +106,7 @@ def optimize_territories(file):
   # Initialize GridSearchCV
   grid_search = GridSearchCV(
     estimator=model, 
-    param_grids=param_grid,  
+    param_grid=param_grid,  
     cv=5, 
     scoring='accuracy', 
     n_jobs=-1
