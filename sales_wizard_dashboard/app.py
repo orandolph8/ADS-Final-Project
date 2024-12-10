@@ -10,7 +10,7 @@ from product_pricing import predict_pricing
 from territorial_sales import optimize_territories
 from lead_scoring import score_leads
 
-# Add background image    
+# Add background image for main    
 def add_bg_from_local(image_file):
     with open(image_file, 'rb') as image_file:
         encoded_string = base64.b64encode(image_file.read())
@@ -21,6 +21,24 @@ def add_bg_from_local(image_file):
         background-image: url(data:image/{'jpeg'};base64,{encoded_string.decode()});
         background-size: cover;
         background-position: center;
+    }}
+    <style/>
+    """,
+    unsafe_allow_html=True
+    )
+
+# Add background to sidebar
+def set_sidebar_background(image_file):
+    with open(image_file, 'rb') as image_file:
+        encoded_string = base64.b64encode(image_file.read())
+    st.markdown(
+    f"""
+    <style>
+    [data-testid="stSidebar"] {{
+        background-image: url(data:image/{'png'};base64,{encoded_string.decode()});
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
     }}
     <style/>
     """,
@@ -55,23 +73,15 @@ def main():
             padding-left: {padding}rem;
             padding-bottom: {padding}rem;
         }} </style> """, unsafe_allow_html=True)
-
-    # Update sidebar
-    updated_sidebar = '''
-        <style>
-        @import url("https://use.typekit.net/{e248bc183d49bcdcc3a6b0d39a6ac38f3ef506bd}.css");
-        
-        #stSidebarNav {{
-            font-family: 'Ice Cream Slant', sans-serif;
-        }}
-        </style>
-        '''
     
     # Set font color for main app
     set_font_color('#FFFFFF')
     
     # Add background image
     add_bg_from_local('healthcare_products_right.jpeg')
+
+    # Add sidebar background
+    set_sidebar_background('medical_products_sidebard.png')
     
     st.title("Healthcare SalesWizard Dashboard")
 
