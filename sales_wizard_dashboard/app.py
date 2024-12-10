@@ -154,6 +154,7 @@ def product_bundling_module(uploaded_file):
 
 def territorial_sales_module(uploaded_file):
     st.header("Territorial Sales Optimization Module")
+    st.subheader('Please be patient while model runs')
 
     try:
         # Generate choropleth map    
@@ -161,7 +162,6 @@ def territorial_sales_module(uploaded_file):
 
         # Display map
         st.subheader('Predicted Growth Sales by State')
-        st.subheader('Please be patient while model runs')
         st.plotly_chart(territorial_sales_results)
 
         # Display best hyperparameters
