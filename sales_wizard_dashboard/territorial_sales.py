@@ -92,7 +92,7 @@ def optimize_territories(file):
   }
 
   # Initialize GridSearchCV
-  grid_search = GridSearchCV(estimator=model, param_grid=param_grid, cv=5, scoring='accuracy')
+  grid_search = GridSearchCV(estimator=model, param_grid=param_grid, cv=3, scoring='accuracy')
   grid_search.fit(X_train_scaled, y_train)
 
   # Print best params
