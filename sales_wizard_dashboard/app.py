@@ -161,6 +161,7 @@ def territorial_sales_module(uploaded_file):
 
         # Display map
         st.subheader('Predicted Growth Sales by State')
+        st.subheader('Please be patient while model runs')
         st.plotly_chart(territorial_sales_results)
 
         # Display best hyperparameters
