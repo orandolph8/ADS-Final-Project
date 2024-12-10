@@ -22,9 +22,6 @@ def optimize_territories(file):
   # Ensure 'state' column is clean
   df['state'] = df['state'].str.strip()
 
-  # Map states to regions
-  state_to_region = df[['state', 'region']].drop_duplicates().set_index('state')['region'].to_dict()
-
   # Convert 'date_of_sale' to datetime for time series analysis
   df['date_of_sale'] = pd.to_datetime(df['date_of_sale'])
   df['year_month'] = df['date_of_sale'].dt.to_period('M') # Extract only year and month
@@ -75,9 +72,15 @@ def optimize_territories(file):
   selected_features = [features[i] for i in selector.get_support(indices=True)]
   print('Selected Features:', selected_features)
 
+  # Save original indices
+  X_indices = X.index
+
   # Split into training and testing sets
   X_train, X_test, y_train, y_test = train_test_split(X_selected, y, test_size=0.2, random_state=42)
 
+  # Save original indices of X_test before transformation
+  original_X_test_indices = X_indices[X_test.index]
+  
   # Standardize numerical features
   scaler = StandardScaler()
   X_train_scaled = scaler.fit_transform(X_train)
@@ -130,7 +133,7 @@ def optimize_territories(file):
   accuracy = accuracy_score(y_test, y_pred)
 
   # Udpate only rows in df corresponding to test set
-  df.loc[X_test.index, 'predicted_growth_category'] = y_pred
+  df.loc[original_X_test_indices, 'predicted_growth_category'] = y_pred
 
   # Calculate average growth rate percentage by state
   average_growth_by_state = df.groupby('state')['growth_rate'].mean()
