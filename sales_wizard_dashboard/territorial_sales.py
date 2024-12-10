@@ -8,7 +8,7 @@ from sklearn.model_selection import train_test_split
 #from sklearn.decomposition import PCA
 from sklearn.feature_selection import SelectKBest, f_classif
 from sklearn.metrics import accuracy_score
-from sklearn.model_selection import RandomizedSearchCV
+from sklearn.model_selection import GridSearchCV
 
 # Define Healthcare Sales Territory Optimization function
 def optimize_territories(file):
@@ -91,6 +91,7 @@ def optimize_territories(file):
     min_samples_split=2,
     min_samples_leaf=1,
     n_jobs=-1,
+    verbose=0
   )
 
   # Define parameter grid
@@ -103,14 +104,12 @@ def optimize_territories(file):
   }
 
   # Initialize GridSearchCV
-  random_search = RandomizedSearchCV(
+  grid_search = GridSearchCV(
     estimator=model, 
-    param_distributions=param_grid, 
-    n_iter=50, 
+    param_grids=param_grid,  
     cv=5, 
     scoring='accuracy', 
-    random_state=42,
-    verbose=1
+    n_jobs=-1
   )
   random_search.fit(X_train_scaled, y_train)
 
