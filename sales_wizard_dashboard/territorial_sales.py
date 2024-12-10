@@ -2,7 +2,7 @@
 from sklearn.cluster import KMeans
 import pandas as pd
 import plotly.express as px
-from lightgbm import LGBMClassifier
+from xgboost import XGBClassifier
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.decomposition import PCA
@@ -73,13 +73,17 @@ def optimize_territories(file):
   X_test_scaled = scaler.transform(X_test)
   
   # Train XGBoost Classifier
-  model = LGBMClassifier(
+  model = XGBClassifier(
     n_estimators=1000, 
     max_depth=7, 
     learning_rate=0.05,
     random_state=42,
+    gamma=0.1,
+    use_label_encoder=False,
     subsample=0.8,
     reg_lambda=1,
+    alpha=0,
+    eval_metric='logloss'
   )
 
   # Define parameter grid
