@@ -154,7 +154,7 @@ def product_bundling_module(uploaded_file):
 
 def territorial_sales_module(uploaded_file):
     st.header("Territorial Sales Optimization Module")
-    st.subheader('Please be patient while model runs')
+    st.subheader('Please be patient while model optimizes')
 
     try:
         # Generate choropleth map    
