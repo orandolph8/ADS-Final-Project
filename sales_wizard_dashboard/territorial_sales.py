@@ -5,7 +5,8 @@ import plotly.express as px
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.model_selection import train_test_split
-from sklearn.decomposition import PCA
+#from sklearn.decomposition import PCA
+from sklearn.feature_selection import SelectKBest, f_classif
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import RandomizedSearchCV
 
@@ -54,18 +55,28 @@ def optimize_territories(file):
   target = 'growth_category_encoded'
 
   # Apply PCA for dimensionality reduction with 4 components
-  pca = PCA(n_components=4, random_state=42)
-  df_pca = pca.fit_transform(df[features])
-  df_pca = pd.DataFrame(df_pca)
+  #pca = PCA(n_components=4, random_state=42)
+  #df_pca = pca.fit_transform(df[features])
+  #df_pca = pd.DataFrame(df_pca)
   
   # Encode Target Variable
   if target not in df.columns or df[target].dtype == 'object':
     df['growth_category_encoded'] = LabelEncoder().fit_transform(df['growth_category'])
 
-  #Split data into training and testing sets
-  X = df_pca
+  # Define X and y
+  X = df[features]
   y = df['growth_category_encoded']
-  X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+  # Apply Feature Selection by Selecting Top 4 Features based on ANOVA F-value
+  selector = SelectKBest(score_func=f_classif, k=4)
+  X_selected = selector.fit_transform(X, y)
+
+  # Get selected feature names for reference
+  selected_features = [features[i] for i in select.get_support(indices=True)]
+  print('Selected Features:', selected_features)
+
+  # Split into training and testing sets
+  X_train, X_test, y_train, y_test = train_test_split(X_selected, y, test_size=0.2, random_state=42)
 
   # Standardize numerical features
   scaler = StandardScaler()
@@ -78,7 +89,8 @@ def optimize_territories(file):
     max_depth=None, 
     random_state=42,
     min_samples_split=2,
-    min_samples_leaf=1
+    min_samples_leaf=1,
+    n_jobs=-1,
   )
 
   # Define parameter grid
