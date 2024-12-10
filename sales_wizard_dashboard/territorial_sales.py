@@ -111,14 +111,14 @@ def optimize_territories(file):
     scoring='accuracy', 
     n_jobs=-1
   )
-  random_search.fit(X_train_scaled, y_train)
+  grid_search.fit(X_train_scaled, y_train)
 
   # Print best params
-  best_params = random_search.best_params_
+  best_params = grid_search.best_params_
   print('Best Parameters:', best_params)
 
   # Use best params
-  best_model = random_search.best_estimator_
+  best_model = grid_search.best_estimator_
 
   #Train best model
   best_model.fit(X_train_scaled, y_train)
