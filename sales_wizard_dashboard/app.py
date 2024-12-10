@@ -81,7 +81,7 @@ def main():
     add_bg_from_local('healthcare_products_right.jpeg')
 
     # Add sidebar background
-    set_sidebar_background('medical_products_sidebard.png')
+    set_sidebar_background('medical_products_sidebar.png')
     
     st.title("Healthcare SalesWizard Dashboard")
 
