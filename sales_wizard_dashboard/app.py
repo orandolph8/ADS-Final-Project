@@ -36,7 +36,16 @@ def add_bg_from_local(image_file):
     """,
     unsafe_allow_html=True
     )
+# Update sidebar
+updated_sidebar = '''
+    <style>
+    #stSidebarNav {
+    font-family: 'Showtime';
+    }
+    </style>
+    '''
 
+# Set font color
 def set_font_color(main_color: str):
     st.markdown(
         f"""
