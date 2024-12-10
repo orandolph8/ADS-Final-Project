@@ -72,7 +72,7 @@ def optimize_territories(file):
   X_selected = selector.fit_transform(X, y)
 
   # Get selected feature names for reference
-  selected_features = [features[i] for i in select.get_support(indices=True)]
+  selected_features = [features[i] for i in selector.get_support(indices=True)]
   print('Selected Features:', selected_features)
 
   # Split into training and testing sets
