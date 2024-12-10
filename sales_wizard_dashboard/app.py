@@ -26,14 +26,6 @@ def add_bg_from_local(image_file):
     """,
     unsafe_allow_html=True
     )
-# Update sidebar
-updated_sidebar = '''
-    <style>
-    #stSidebarNav {
-    font-family: 'Showtime';
-    }
-    </style>
-    '''
 
 # Set font color
 def set_font_color(main_color: str):
@@ -67,9 +59,11 @@ def main():
     # Update sidebar
     updated_sidebar = '''
         <style>
-        #stSidebarNav {
-        font-family: 'Showtime';
-        }
+        @import url("https://use.typekit.net/{e248bc183d49bcdcc3a6b0d39a6ac38f3ef506bd}.css");
+        
+        #stSidebarNav {{
+            font-family: 'Ice Cream Slant', sans-serif;
+        }}
         </style>
         '''
     
