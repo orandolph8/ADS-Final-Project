@@ -135,7 +135,7 @@ def main():
     set_sidebar_background('medical_products_sidebar_2.png')
 
     # Add top bar background
-    set_topbar_background('medical_equipment_topbar.png')
+    #set_topbar_background('medical_equipment_topbar.png')
     
     st.title("Healthcare SalesWizard Dashboard")
 
