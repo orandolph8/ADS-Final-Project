@@ -152,6 +152,8 @@ def main():
             lead_scoring_module(uploaded_file)
 
 def product_pricing_module(uploaded_file):
+    st.subheader('Dataset: healthcare_sales_dataset.csv')
+    
     # Perform analysis
     results, best_model_name, best_model_rmse, ideal_pricing = predict_pricing(uploaded_file)
 
@@ -185,6 +187,8 @@ def product_pricing_module(uploaded_file):
     st.pyplot(fig2)
 
 def product_bundling_module(uploaded_file):
+    st.subheader('Dataset: healthcare_sales_dataset.csv')
+    
     # Perform bundle analysis
     hospital_avg, clinic_avg = generate_bundles(uploaded_file)
 
@@ -218,6 +222,7 @@ def product_bundling_module(uploaded_file):
 
 def territorial_sales_module(uploaded_file):
     st.header("Territorial Sales Optimization Module")
+    st.subheader('Dataset: healthcare_sales_dataset.csv')
 
     try:
         # Generate choropleth map    
@@ -237,6 +242,7 @@ def territorial_sales_module(uploaded_file):
 
 def lead_scoring_module(uploaded_file):
     st.header("Lead Scoring Module")
+    st.subheader('Dataset: leadscore_dataset.csv')
 
     # Initialize session state for results
     if "result_df" not in st.session_state:
