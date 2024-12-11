@@ -52,12 +52,15 @@ def set_topbar_background(image_file):
     st.markdown(
     f"""
     <style>
-    header .block-container {{
+    header {{
         background-image: url(data:image/{'png'};base64,{encoded_string.decode()});
         background-size: cover;
         background-position: center;
         background-repeat: repeat;
-        padding-top: 0;
+        height: 70px;
+    }}
+    header .css-1v3fvcr {{
+        background: rgba(0, 0, 0, 0.2);
     }}
     </style>
     """,
