@@ -96,11 +96,14 @@ def main():
     </style>
     """, unsafe_allow_html=True)
 
-    # Center sidebar text
+    # Center sidebar text vertically
     st.write("""
     <style>
     [data-testid='stSidebar'] {
-        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 100vh;
     }
     </style>
     """, unsafe_allow_html=True)
