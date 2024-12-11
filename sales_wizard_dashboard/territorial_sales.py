@@ -7,7 +7,6 @@ from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.decomposition import PCA
 from sklearn.metrics import accuracy_score
-from sklearn.model_selection import GridSearchCV
 
 # Define Healthcare Sales Territory Optimization function
 def optimize_territories(file):
@@ -74,7 +73,7 @@ def optimize_territories(file):
   # Train XGBoost Classifier
   model = RandomForestClassifier(
     n_estimators=1000, 
-    max_depth=None, 
+    max_depth=5, 
     random_state=42,
     min_samples_split=2,
     min_samples_leaf=1,
@@ -82,43 +81,17 @@ def optimize_territories(file):
     verbose=0
   )
 
-  # Define parameter grid
-  param_grid = {
-    'max_depth': [None, 10, 20],
-    'n_estimators': [100, 200, 500],
-    'min_samples_split': [2, 5, 10],
-    'min_samples_leaf': [1, 2, 4],
-    'bootstrap': [True, False]
-  }
-
-  # Initialize GridSearchCV
-  grid_search = GridSearchCV(
-    estimator=model, 
-    param_grid=param_grid,  
-    cv=5, 
-    scoring='accuracy', 
-    n_jobs=-1
-  )
-  grid_search.fit(X_train_scaled, y_train)
-
-  # Print best params
-  best_params = grid_search.best_params_
-  print('Best Parameters:', best_params)
-
-  # Use best model
-  best_model = grid_search.best_estimator_
-
-  #Train best model
-  best_model.fit(X_train_scaled, y_train)
+  #Train model
+  model.fit(X_train_scaled, y_train)
 
   # Predict with best model
-  y_pred = best_model.predict(X_test_scaled)
+  y_pred = model.predict(X_test_scaled)
 
   # Calculate Accuracy
   accuracy = accuracy_score(y_test, y_pred)
 
   # Udpate only rows in df corresponding to test set
-  df.loc[original_X_test_indices, 'predicted_growth_category'] = y_pred
+  df.loc[X_test.index, 'predicted_growth_category'] = y_pred
 
   # Calculate average growth rate percentage by state
   average_growth_by_state = df.groupby('state')['growth_rate'].mean()
@@ -171,4 +144,4 @@ def optimize_territories(file):
     customdata=all_growth_states[['growth_rate', 'sale_amount']]
   )
 
-  return fig, best_params, accuracy
+  return fig, accuracy
