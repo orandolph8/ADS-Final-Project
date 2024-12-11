@@ -84,6 +84,9 @@ def main():
     html, body, [class*="css"]  {
        font-family: 'Zen Dots';
     }
+    [data-testid='stSidebar'] * {
+        font-family: 'Zen Dots';
+    }
     </style>
     """, unsafe_allow_html=True)
 
