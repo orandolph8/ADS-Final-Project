@@ -2,7 +2,8 @@
 from sklearn.cluster import KMeans
 import pandas as pd
 import plotly.express as px
-from sklearn.ensemble import RandomForestClassifier
+#from sklearn.ensemble import RandomForestClassifier
+from xgboost import XGBClassifier
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.decomposition import PCA
@@ -29,7 +30,7 @@ def optimize_territories(file):
   state_sales['growth_rate'] = state_sales.groupby('state')['sale_amount'].pct_change()
   state_sales['growth_rate'] = state_sales['growth_rate'].fillna(0) # Replace NaN growth rates with 0
   
-   # Merge growth_rate back into original dataframe
+  # Merge growth_rate back into original dataframe
   df = df.merge(
     state_sales[['state', 'growth_rate']], on='state', how='left')
   
@@ -52,7 +53,7 @@ def optimize_territories(file):
   # Apply PCA for dimensionality reduction with 4 components
   pca = PCA(n_components=4, random_state=42)
   df_pca = pca.fit_transform(df[features])
-  df_pca = pd.DataFrame(df_pca)
+  df_pca = pd.DataFrame(df_pca, columns=[f'PC{i+1}' for i in range(4)])
   
   # Encode Target Variable
   if target not in df.columns or df[target].dtype == 'object':
@@ -71,14 +72,12 @@ def optimize_territories(file):
   X_test_scaled = scaler.transform(X_test)
   
   # Train XGBoost Classifier
-  model = RandomForestClassifier(
+  model = XGBClassifier(
     n_estimators=1000, 
-    max_depth=5, 
+    max_depth=6,
+    learning_rate=0.01,
     random_state=42,
-    min_samples_split=2,
-    min_samples_leaf=1,
-    n_jobs=-1,
-    verbose=0
+    n_jobs=-1
   )
 
   #Train model
