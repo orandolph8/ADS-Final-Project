@@ -87,6 +87,9 @@ def main():
     [data-testid='stSidebar'] * {
         font-family: 'Zen Dots';
     }
+    .stHeader, .stSubheader, .stWrite, .stMarkdown, .stDataFrame, .stTable {
+        font-family: 'Zen Dots';
+    }
     </style>
     """, unsafe_allow_html=True)
 
