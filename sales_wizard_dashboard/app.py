@@ -76,6 +76,17 @@ def main():
     
     # Set font color for main app
     set_font_color('#FFFFFF')
+
+    #Change Overall Font to Zen Dots
+    st.write("""
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Zen+Dots&effect=shadow-multiple');
+    html, body, [class*="css"]  {
+       font-family: 'Zen Dots';
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
     
     # Add background image
     add_bg_from_local('healthcare_products_right.jpeg')
