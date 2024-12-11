@@ -65,7 +65,7 @@ def set_font_color(main_color: str):
 
 def main():
     # Condense padding
-    padding = 0
+    padding = 1
     st.markdown(f""" <style>
         .reportview-container .main .block-container{{
             padding-top: {padding}rem;
