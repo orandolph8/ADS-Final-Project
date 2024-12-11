@@ -90,6 +90,9 @@ def main():
     .stHeader, .stSubheader, .stWrite, .stMarkdown, .stDataFrame, .stTable {
         font-family: 'Zen Dots';
     }
+    .stExpanderHeader, .stRadio, .stButton, .stFileUploader {
+        font-family: 'Zen Dots''
+    }
     </style>
     """, unsafe_allow_html=True)
 
