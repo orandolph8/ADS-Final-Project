@@ -52,7 +52,7 @@ def set_topbar_background(image_file):
     st.markdown(
     f"""
     <style>
-    .stApp .block-container {{
+    header .block-container {{
         background-image: url(data:image/{'png'};base64,{encoded_string.decode()});
         background-size: cover;
         background-position: center;
@@ -134,8 +134,8 @@ def main():
     # Add sidebar background
     set_sidebar_background('medical_products_sidebar_2.png')
 
-    # Add top bar background
-    #set_topbar_background('medical_equipment_topbar.png')
+    #Add top bar background
+    set_topbar_background('medical_equipment_topbar.png')
     
     st.title("Healthcare SalesWizard Dashboard")
 
