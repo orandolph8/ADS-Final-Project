@@ -22,7 +22,7 @@ def add_bg_from_local(image_file):
         background-size: cover;
         background-position: center;
     }}
-    <style/>
+    </style>
     """,
     unsafe_allow_html=True
     )
@@ -40,7 +40,7 @@ def set_sidebar_background(image_file):
         background-position: center;
         background-repeat: no-repeat;
     }}
-    <style/>
+    </style>
     """,
     unsafe_allow_html=True
     )
