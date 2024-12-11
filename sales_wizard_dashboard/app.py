@@ -45,27 +45,6 @@ def set_sidebar_background(image_file):
     unsafe_allow_html=True
     )
 
-# Add background to top bar
-def set_topbar_background(image_file):
-    with open(image_file, 'rb') as image_file:
-            encoded_string = base64.b64encode(image_file.read())
-    st.markdown(
-    f"""
-    <style>
-    header {{
-        background-image: url(data:image/{'png'};base64,{encoded_string.decode()});
-        background-size: cover;
-        background-position: center;
-        background-repeat: repeat;
-        height: 70px;
-    }}
-    header .css-1v3fvcr {{
-        background: rgba(0, 0, 0, 0.2);
-    }}
-    </style>
-    """,
-    unsafe_allow_html=True
-    )
 
 # Set font color
 def set_font_color(main_color: str):
@@ -118,6 +97,15 @@ def main():
     </style>
     """, unsafe_allow_html=True)
 
+    # Override Title Font Globally
+    st.write("""
+        <style>
+        .stApp h1, .stApp h2, .stApp h3, .stApp h4, .stApp h5, .stApp h6 {
+            font-family: 'Zen Dots', sans-serif;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
     # Center sidebar text vertically
     st.write("""
     <style>
@@ -136,9 +124,6 @@ def main():
 
     # Add sidebar background
     set_sidebar_background('medical_products_sidebar_2.png')
-
-    #Add top bar background
-    set_topbar_background('medical_equipment_topbar.png')
     
     st.title("Healthcare SalesWizard Dashboard")
 
