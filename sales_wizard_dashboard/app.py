@@ -59,7 +59,7 @@ def set_topbar_background(image_file):
         background-repeat: repeat;
         padding-top: 0;
     }}
-    <style/>
+    </style>
     """,
     unsafe_allow_html=True
     )
@@ -110,7 +110,7 @@ def main():
         font-family: 'Zen Dots';
     }
     .stExpanderHeader, .stRadio, .stButton, .stFileUploader {
-        font-family: 'Zen Dots''
+        font-family: 'Zen Dots';
     }
     </style>
     """, unsafe_allow_html=True)
@@ -122,7 +122,7 @@ def main():
         display: flex;
         flex-direction: column;
         justify-content: center;
-        height: 100vh;
+        height: auto;
     }
     </style>
     """, unsafe_allow_html=True)
