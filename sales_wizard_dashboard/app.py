@@ -96,6 +96,15 @@ def main():
     </style>
     """, unsafe_allow_html=True)
 
+    # Center sidebar text
+    st.write("""
+    <style>
+    [data-testid='stSidebar'] {
+        text-align: center;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
     
     # Add background image
     add_bg_from_local('healthcare_products_right.jpeg')
