@@ -180,7 +180,7 @@ def territorial_sales_module(uploaded_file):
 
     try:
         # Generate choropleth map    
-        territorial_sales_results, best_params, accuracy = optimize_territories(uploaded_file)
+        territorial_sales_results, accuracy = optimize_territories(uploaded_file)
 
         # Display map
         st.subheader('Predicted Growth Sales by State')
