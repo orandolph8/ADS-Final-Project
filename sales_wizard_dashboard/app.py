@@ -186,10 +186,6 @@ def territorial_sales_module(uploaded_file):
         st.subheader('Predicted Growth Sales by State')
         st.plotly_chart(territorial_sales_results)
 
-        # Display best hyperparameters
-        st.subheader('Best Hyperparameters')
-        st.write(best_params)
-
         # Display accuracy
         st.subheader('Model Accuracy')
         st.write(f'Accuracy: {accuracy * 100:.2f}%')
