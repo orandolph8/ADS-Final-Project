@@ -1,0 +1,23 @@
+import matplotlib.pyplot as plt
+import seaborn as sns
+import base64
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.pipeline import Pipeline
+from sklearn.metrics import roc_auc_score, mean_squared_error, accuracy_score
+import joblib
+from mlxtend.frequent_patterns import apriori, association_rules
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.compose import ColumnTransformer
+from sklearn.metrics import 
+from sklearn.linear_model import LinearRegression
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
+from sklearn.svm import SVR
+from xgboost import XGBRegressor
+from sklearn.cluster import KMeans
+import plotly.express as px
+from xgboost import XGBClassifier
+from sklearn.preprocessing import StandardScaler, LabelEncoder
+from sklearn.decomposition import PCA
