@@ -40,8 +40,7 @@ def predict_pricing(file, model_path="models/saved_pipeline.joblib"):
                 "Linear Regression": LinearRegression(),
                 "Random Forest": RandomForestRegressor(random_state=42),
                 "Gradient Boosting": GradientBoostingRegressor(random_state=42),
-                "SVR": SVR(),
-                "XGBoost": XGBRegressor(random_state=42, verbosity=0)
+                "SVR": SVR()
             }
 
             # Split data into training and testing
