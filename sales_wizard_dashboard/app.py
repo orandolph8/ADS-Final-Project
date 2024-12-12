@@ -39,22 +39,32 @@ def add_bg_from_local(image_file_name):
         st.error(f"Background image '{image_file_name}' not found in {current_dir}")
 
 # Add background to sidebar
-def set_sidebar_background(image_file):
-    with open(image_file, 'rb') as image_file:
-        encoded_string = base64.b64encode(image_file.read())
-    st.markdown(
-    f"""
-    <style>
-    [data-testid="stSidebar"] {{
-        background-image: url(data:image/{'png'};base64,{encoded_string.decode()});
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-    }}
-    </style>
-    """,
-    unsafe_allow_html=True
-    )
+def set_sidebar_background(image_file_name):
+    # Dynamically resolve the full path to the image
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    image_path = os.path.join(current_dir, image_file_name)
+
+    # Check if the file exists
+    if os.path.exists(image_path):
+        # Open and encode the image
+        with open(image_path, 'rb') as image_file:
+            encoded_string = base64.b64encode(image_file.read())
+        st.markdown(
+            f"""
+            <style>
+            [data-testid="stSidebar"] {{
+                background-image: url(data:image/png;base64,{encoded_string.decode()});
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+            }}
+            </style>
+            """,
+            unsafe_allow_html=True
+        )
+    else:
+        # Display an error message if the file is missing
+        st.error(f"Sidebar background image '{image_file_name}' not found in {current_dir}")
 
 
 # Set font color
