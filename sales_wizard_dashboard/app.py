@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import base64
+import os
 from PIL import Image
 
 from product_bundling import generate_bundles
