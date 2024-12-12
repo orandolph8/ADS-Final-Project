@@ -2,8 +2,8 @@
 from sklearn.cluster import KMeans
 import pandas as pd
 import plotly.express as px
-#from sklearn.ensemble import RandomForestClassifier
-from xgboost import XGBClassifier
+from sklearn.ensemble import RandomForestClassifier
+#from xgboost import XGBClassifier
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.decomposition import PCA
@@ -72,10 +72,9 @@ def optimize_territories(file):
   X_test_scaled = scaler.transform(X_test)
   
   # Train XGBoost Classifier
-  model = XGBClassifier(
-    n_estimators=1000, 
-    max_depth=6,
-    learning_rate=0.01,
+  model = RandomForestClassifier(
+    n_estimators=100, 
+    max_depth=None,
     random_state=42,
     n_jobs=-1
   )
