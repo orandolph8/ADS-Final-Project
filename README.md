@@ -1,7 +1,7 @@
-# ADS-Final-Project
+# Healthcare Sales Wizard
 All material for the DSCI-590: ADS Final Project
 
-1. Name:  Healthcare Sales Wizard
+1. Project Scope: Healthcare sales and pricing machine learning models and analytics dashboard 
 2. Team Members: Owen Randolph (Project Lead), Erik Kreider, Ian Boen
 3. Description: The reason these topics interest us is that they can be used to help managers make wise decisions about how to direct a company sector.  Business is a very competitive field, so data-driven decisions are a key to success. Healthcare sales is a particularly interesting domain because there are so many unique variables that come into play when making sales decisions.
 The user-facing feature of our project will be a dashboard that can be adjusted and give outputs based on features selected.  Our project will be comprised of four ML and visualization features.  The following shows the modules, their importance to the user, and the machine learning model used to give output data:
